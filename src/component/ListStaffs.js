@@ -12,6 +12,7 @@ import {
   Row,
   Col,
   Label,
+  FormFeedback,
 } from "reactstrap";
 import { STAFFS } from "../shared/staff";
 
@@ -29,14 +30,53 @@ function ListStaffs() {
     annualLeave: 0,
     overTime: 0,
     image: "/assets/images/alberto.png",
+    touched: {
+      name: false,
+      annualLeave: false,
+      department: false,
+      doB: false,
+      overTime: false,
+      salaryScale: false,
+      startDate: false,
+    },
   });
   const [isOpenModal, setOpenModal] = useState(false);
 
+  const handleBlur = (field) => (e) => {
+    setNewStaff({
+      touched: { ...newStaff.touched, [field]: true },
+    });
+  };
+
+  const validate = (
+    startDate,
+    overTime,
+    salaryScale,
+    doB,
+    department,
+    annualLeave,
+    name
+  ) => {
+    const errors = {
+      startDate: "",
+      overTime: "",
+      salaryScale: "",
+      doB: "",
+      department: "",
+      annualLeave: "",
+      name: "",
+    };
+
+    if (newStaff.name && name.length < 6)
+      errors.name = "Tên nhân viên nên lớn hơn 6 kí tự";
+  };
+
+  const errors = validate(newStaff.name);
   const handleSubmit = (e) => {
+    //set id
     newStaff.id = staffs.length;
     STAFFS.concat(newStaff);
     JSON.parse(localStorage.getItem("arrCurrent"));
-
     localStorage.setItem("newStaff", JSON.stringify(newStaff));
     localStorage.setItem("arrCurrent", JSON.stringify(staffs.concat(newStaff)));
     JSON.parse(localStorage.getItem("arrCurrent"));
@@ -79,8 +119,13 @@ function ListStaffs() {
                       placeholder="Nhập tên của bạn"
                       className="form-control"
                       onChange={handleChange}
+                      value={newStaff.name}
+                      valid={errors.name === ""}
+                      invalid={errors.name !== ""}
+                      onBlur={handleBlur("name")}
                     ></input>
                   </Col>
+                  <FormFeedback>{errors.firstname}</FormFeedback>
                 </Row>
               </FormGroup>
               <FormGroup>
