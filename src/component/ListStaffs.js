@@ -49,7 +49,9 @@ function ListStaffs() {
   const handleChange = (e) => {
     const target = e.target;
     const name = target.name;
+
     newStaff[name] = target.value;
+
     newStaff.id = staffs.length;
     console.log(newStaff);
   };
@@ -191,14 +193,11 @@ function ListStaffs() {
         <BreadcrumbItem>
           <Link to={"/"}>Home</Link>
         </BreadcrumbItem>
-        <BreadcrumbItem>
-          <Link to={"/staffs"}>Staffs</Link>
-        </BreadcrumbItem>
       </Breadcrumb>
       <div className="col-12 row">
         <div className="col-6">
           <Button className="col-3" onClick={toggleModal}>
-            add
+            +
           </Button>
         </div>
       </div>

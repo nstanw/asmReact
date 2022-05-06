@@ -17,7 +17,7 @@ function Main() {
   const localStaffs = JSON.parse(localStorage.getItem("arrCurrent"));
   const staffs = localStaffs === null ? STAFFS : localStaffs;
 
-  const [col, setCol] = useState("");
+  const [col] = useState("");
   const [departments, setDepartment] = useState(DEPARTMENTS);
 
   const StaffWithId = () => {

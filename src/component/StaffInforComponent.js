@@ -22,7 +22,7 @@ const StaffInfor = ({ staff }) => {
             Chức vụ:
             {parseFloat(staff.salaryScale) > 1 ? "Quản lý" : "Nhân viên"}
           </li>
-          <li>Phòng ban: {staff.department.name}</li>
+          <li>Phòng ban: {staff.department.name || staff.department}</li>
           <li>Ngày nghỉ còn lại: {staff.annualLeave}</li>
           <li>Ngày đi làm thêm: {staff.overTime}</li>
         </div>
