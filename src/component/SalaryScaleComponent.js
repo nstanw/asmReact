@@ -14,14 +14,16 @@ const vnd = (salaryScale, overTime) => {
   let salary = salaryScale * 3000000 + overTime * (200000 / 8);
   return salary.toFixed(0);
 };
-const arrSalary = STAFFS;
 
-const arrSortSalary = arrSalary.map((salary) => {
+const localStaffs = JSON.parse(localStorage.getItem("arrCurrent"));
+const staffs = localStaffs === null ? STAFFS : localStaffs;
+
+const arrSortSalary = staffs.map((salary) => {
   let luong = vnd(salary.salaryScale, salary.overTime);
   return (salary = { ...salary, salaryVnd: parseInt(luong) });
 });
 console.log("luong", arrSortSalary);
-const SalaryScale = ({col}) => {
+const SalaryScale = ({ staffs }) => {
   //hook
   const [salarys, setSalary] = useState(arrSortSalary);
   //onchange
@@ -75,7 +77,7 @@ const SalaryScale = ({col}) => {
 
       {true &&
         salarys.map((staff) => (
-          <div className={col !== "" ? col : `col-12 col-md-6 col-lg-4`} key={staff.id}>
+          <div className={`col-12 col-md-6 col-lg-4`} key={staff.id}>
             <Card>
               <CardTitle>{staff.name}</CardTitle>
               <CardText>Mã nhân viên: {staff.id}</CardText>

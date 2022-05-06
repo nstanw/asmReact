@@ -6,7 +6,7 @@ import {
   CardTitle,
   CardText,
 } from "reactstrap";
-const SalaryScale = ({ staffs, col}) => {
+const SalaryScale = ({ staffs, col }) => {
   return (
     <div className="row salary">
       <div className="col-12">
@@ -27,7 +27,10 @@ const SalaryScale = ({ staffs, col}) => {
         </select>
       </div>
       {staffs.map((staff) => (
-        <div   className={col !== "" ? col : `col-6 col-md-4 col-lg-2`>
+        <div
+          key={staff.id}
+          className={col !== "" ? col : `col-6 col-md-4 col-lg-2`}
+        >
           <Card>
             <CardTitle>{staff.name}</CardTitle>
             <CardText>Mã nhân viên: {staff.id}</CardText>

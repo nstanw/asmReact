@@ -59,7 +59,7 @@ function Main() {
           path="/departments"
           element={<Department departments={departments} col={col} />}
         />
-        <Route path="/salaryscale" element={<SalaryScale col={col} />} />
+        <Route path="/salaryscale" element={<SalaryScale />} />
         <Route
           path="/SortDepartment"
           element={<StaffWithDepartment col={col} />}
