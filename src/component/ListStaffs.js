@@ -25,14 +25,15 @@ function ListStaffs() {
     doB: "",
     salaryScale: 1,
     startDate: "",
-    // department: DEPARTMENTS[3],
-    annualLeave: 4,
-    overTime: 5,
+    department: "",
+    annualLeave: 0,
+    overTime: 0,
     image: "/assets/images/alberto.png",
   });
   const [isOpenModal, setOpenModal] = useState(false);
 
   const handleSubmit = (e) => {
+    newStaff.id = staffs.length;
     STAFFS.concat(newStaff);
     JSON.parse(localStorage.getItem("arrCurrent"));
 
@@ -48,8 +49,8 @@ function ListStaffs() {
   const handleChange = (e) => {
     const target = e.target;
     const name = target.name;
-
     newStaff[name] = target.value;
+    newStaff.id = staffs.length;
     console.log(newStaff);
   };
 
