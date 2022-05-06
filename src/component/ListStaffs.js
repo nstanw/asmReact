@@ -63,8 +63,6 @@ function ListStaffs() {
       startDate: "",
     };
 
-    //check name
-    console.log(newStaff.name);
     if (newStaff.name && name.length < 6) {
       erorrs.name = "Họ và tên phải lớn hơn 6 kí tự";
     }
