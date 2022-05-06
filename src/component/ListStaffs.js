@@ -43,7 +43,7 @@ function ListStaffs() {
 
     setNewStaff(newStaff);
     setOpenModal(!isOpenModal);
-    e.preventDefault();
+    // e.preventDefault();
   };
 
   const handleChange = (e) => {
@@ -196,7 +196,7 @@ function ListStaffs() {
         </BreadcrumbItem>
       </Breadcrumb>
       <div className="col-12 row">
-        <div>
+        <div className="col-6">
           <Button className="col-3" onClick={toggleModal}>
             add
           </Button>
