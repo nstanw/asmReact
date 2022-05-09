@@ -59,6 +59,11 @@ function ListStaffs() {
   //   console.log(newStaff);
   // };
 
+  const required = (val) => val && val.length;
+  const maxLength = (len) => (val) => !val || val.length <= len;
+  const minLength = (len) => (val) => val && val.length >= len;
+  const isNumber = (val) => !isNaN(Number(val));
+
   const toggleModal = () => {
     setOpenModal(!isOpenModal);
   };
@@ -82,7 +87,22 @@ function ListStaffs() {
                       name="name"
                       placeholder="Nhập tên của bạn"
                       className="form-control"
-                
+                      validators={{
+                        required,
+
+                        minLength: minLength(6),
+                        maxLength: maxLength(15),
+                      }}
+                    />
+                    <Errors
+                      className="text-danger"
+                      model=".name"
+                      show="touched"
+                      messages={{
+                        required: "Yêu cầu nhập",
+                        minLength: "Tên phải ít nhất có 6 kí tự",
+                        maxLength: "Tên phải ít hơn 15 kí tự",
+                      }}
                     />
                   </Col>
                 </Row>
@@ -99,10 +119,18 @@ function ListStaffs() {
                       id="doB"
                       name="doB"
                       className="form-control"
-                     
+                      validators={{
+                        required,
+                      }}
                     ></Control.input>
-                   
-                  
+                    <Errors
+                      className="text-danger"
+                      model=".doB"
+                      show="touched"
+                      messages={{
+                        required: "Yêu cầu nhập",
+                      }}
+                    />
                   </Col>
                 </Row>
               </Row>
@@ -118,9 +146,18 @@ function ListStaffs() {
                       id="startDate"
                       name="startDate"
                       className="form-control"
-                     
+                      validators={{
+                        required,
+                      }}
                     ></Control.input>
-                   
+                    <Errors
+                      className="text-danger"
+                      model=".startDate"
+                      show="touched"
+                      messages={{
+                        required: "Yêu cầu nhập",
+                      }}
+                    />
                   </Col>
                 </Row>
               </Row>
@@ -135,13 +172,27 @@ function ListStaffs() {
                       id="department"
                       name="department"
                       className="form-control"
+                      value="Sale"
+                      defaultValue="Sale"
+                      validators={{
+                        required,
+                      }}
                     >
                       <option>Sale</option>
                       <option>IT</option>
                       <option>HR</option>
                       <option>Marketing</option>
                       <option>Finance</option>
+                    
                     </Control.select>
+                    <Errors
+                      className="text-danger"
+                      model=".department"
+                      show="touched"
+                      messages={{
+                        required: "Yêu cầu chọn",
+                      }}
+                    />
                   </Col>
                 </Row>
               </Row>
@@ -158,7 +209,20 @@ function ListStaffs() {
                       name="salaryScale"
                       placeholder="0"
                       className="form-control"
+                      validators={{
+                        required,
+                        valueVal: (val) => val >= 1 && val <= 3
+                      }}
                     ></Control>
+                    <Errors
+                        className="text-danger"
+                        model=".salaryScale"
+                        show="touched"
+                        messages={{
+                          required: "Yêu cầu nhập ",
+                          valueVal: "Giá trị từ 1 -> 3"
+                        }}
+                    />
                   </Col>
                 </Row>
               </Row>
