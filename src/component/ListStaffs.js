@@ -7,15 +7,13 @@ import {
   Modal,
   ModalBody,
   ModalHeader,
-  Form,
-  FormGroup,
   Row,
   Col,
   Label,
-  FormFeedback,
 } from "reactstrap";
-import { isConstructorDeclaration } from "typescript";
+
 import { STAFFS } from "../shared/staff";
+import { Control, LocalForm, Errors } from "react-redux-form";
 
 function ListStaffs() {
   const localStaffs = JSON.parse(localStorage.getItem("arrCurrent"));
@@ -31,71 +29,13 @@ function ListStaffs() {
     annualLeave: 0,
     overTime: 0,
     image: "/assets/images/alberto.png",
-    touched: {
-      name: false,
-      annualLeave: false,
-      department: false,
-      doB: false,
-      overTime: false,
-      salaryScale: false,
-      startDate: false,
-    },
   });
   const [isOpenModal, setOpenModal] = useState(false);
 
-  const handleBlur = (field) => (e) => {
-    setNewStaff({
-      ...newStaff,
-      touched: { ...newStaff.touched, [field]: true },
-    });
-  };
-
-  console.log(newStaff);
-
-  const validate = (name, salaryScale) => {
-    const erorrs = {
-      name: "",
-      annualLeave: "",
-      department: "",
-      doB: "",
-      overTime: "",
-      salaryScale: "",
-      startDate: "",
-    };
-
-    if (newStaff.name && name.length < 6) {
-      erorrs.name = "Họ và tên phải lớn hơn 6 kí tự";
-    }
-
-    if (!newStaff.doB) {
-      erorrs.doB = "Yêu cầu nhập";
-    }
-
-    if (!newStaff.startDate) {
-      erorrs.startDate = "Yêu cầu nhập";
-    }
-
-    if (!newStaff.annualLeave) {
-      erorrs.annualLeave = "Vui lòng nhập";
-    }
-
-    if (!newStaff.overTime) {
-      erorrs.overTime = "Vui lòng nhập";
-    }
-
-    if (newStaff.salaryScale && salaryScale > 3 || salaryScale < 1) {
-      erorrs.salaryScale = "Vui lòng nhập (1.0 -> 3.0)";
-    }
-
-    return erorrs;
-  };
-
-  console.log(newStaff.name.length);
-  //print to errors
-  const errors = validate(newStaff.name, newStaff.salaryScale);
-  console.log(errors.name);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = (values) => {
+    //test form
+    console.log("Current State is: " + JSON.stringify(values));
+    alert("Current State is: " + JSON.stringify(values));
     //set id
     newStaff.id = staffs.length;
     STAFFS.concat(newStaff);
@@ -109,15 +49,15 @@ function ListStaffs() {
     // e.preventDefault();
   };
 
-  const handleChange = (e) => {
-    const target = e.target;
-    const name = target.name;
+  // const handleChange = (e) => {
+  //   const target = e.target;
+  //   const name = target.name;
 
-    newStaff[name] = target.value;
+  //   newStaff[name] = target.value;
 
-    newStaff.id = staffs.length;
-    console.log(newStaff);
-  };
+  //   newStaff.id = staffs.length;
+  //   console.log(newStaff);
+  // };
 
   const toggleModal = () => {
     setOpenModal(!isOpenModal);
@@ -129,161 +69,137 @@ function ListStaffs() {
         <Modal isOpen={isOpenModal} toggle={toggleModal}>
           <ModalHeader>Thêm nhân viên</ModalHeader>
           <ModalBody>
-            <Form className="form-group" onSubmit={handleSubmit}>
-              <FormGroup>
+            <LocalForm className="form-group" onSubmit={handleSubmit}>
+              <Row className="form-group">
                 <Row>
                   <Col md={4}>
                     <Label htmlFor="name">Tên</Label>
                   </Col>
                   <Col>
-                    <input
-                      type="text"
+                    <Control.text
+                      model=".name"
                       id="name"
                       name="name"
                       placeholder="Nhập tên của bạn"
                       className="form-control"
-                      valid={errors.name === ""}
-                      invalid={errors.name !== ""}
-                      onChange={handleChange}
-                      onBlur={handleBlur("name")}
-                      required
-                    ></input>
-                    <p>{errors.name}</p>
+                
+                    />
                   </Col>
                 </Row>
-              </FormGroup>
-              <FormGroup>
+              </Row>
+              <Row className="form-group">
                 <Row>
                   <Col md={4}>
                     <Label htmlFor="doB">Ngày sinh</Label>
                   </Col>
                   <Col>
-                    <input
+                    <Control.input
                       type="date"
+                      model=".doB"
                       id="doB"
                       name="doB"
                       className="form-control"
-                      onChange={handleChange}
-                      onBlur={handleBlur("doB")}
-                      valid={errors.doB === ""}
-                      invalid={errors.doB !== ""}
-                      required
-                    ></input>
-                    <p>{errors.doB}</p>
+                     
+                    ></Control.input>
+                   
+                  
                   </Col>
                 </Row>
-              </FormGroup>
-              <FormGroup>
+              </Row>
+              <Row className="form-group">
                 <Row>
                   <Col md={4}>
                     <Label htmlFor="startDate">Ngày vào công ty</Label>
                   </Col>
                   <Col>
-                    <input
+                    <Control.input
+                      model=".startDate"
                       type="date"
                       id="startDate"
                       name="startDate"
                       className="form-control"
-                      onChange={handleChange}
-                      onBlur={handleBlur("startDate")}
-                      valid={errors.startDate === ""}
-                      invalid={errors.startDate !== ""}
-                      required
-                    ></input>
-                    <p>{errors.startDate}</p>
+                     
+                    ></Control.input>
+                   
                   </Col>
                 </Row>
-              </FormGroup>
-              <FormGroup>
+              </Row>
+              <Row className="form-group">
                 <Row>
                   <Col md={4}>
                     <Label htmlFor="department">Phòng ban</Label>
                   </Col>
                   <Col>
-                    <select
+                    <Control.select
+                      model=".department"
                       id="department"
                       name="department"
-                      onChange={handleChange}
                       className="form-control"
-                      onBlur={handleBlur("department")}
-                      valid={errors.department === ""}
-                      invalid={errors.department !== ""}
                     >
                       <option>Sale</option>
                       <option>IT</option>
                       <option>HR</option>
                       <option>Marketing</option>
                       <option>Finance</option>
-                    </select>
-                    <p>{errors.department}</p>
+                    </Control.select>
                   </Col>
                 </Row>
-              </FormGroup>
-              <FormGroup>
+              </Row>
+              <Row className="form-group">
                 <Row>
                   <Col md={4}>
                     <Label htmlFor="salaryScale">Hệ số lương</Label>
                   </Col>
                   <Col>
-                    <input
+                    <Control
+                      model=".salaryScale"
                       type="number"
                       id="salaryScale"
                       name="salaryScale"
                       placeholder="0"
                       className="form-control"
-                      onChange={handleChange}
-                      onBlur={handleBlur("salaryScale")}
-                      valid={errors.salaryScale === ""}
-                      invalid={errors.salaryScale !== ""}
-                    ></input>
-                    <p>{errors.salaryScale}</p>
+                    ></Control>
                   </Col>
                 </Row>
-              </FormGroup>
-              <FormGroup>
+              </Row>
+              <Row className="form-group">
                 <Row>
                   <Col md={4}>
                     <Label htmlFor="overTime">Số ngày nghỉ còn lại</Label>
                   </Col>
                   <Col>
-                    <input
+                    <Control
+                      model=".annualLeave"
                       type="number"
                       id="annualLeave"
                       name="annualLeave"
                       placeholder="0"
                       className="form-control"
-                      onChange={handleChange}
-                      onBlur={handleBlur("annualLeave")}
-                      valid={errors.annualLeave === ""}
-                      invalid={errors.annualLeave !== ""}
-                    ></input>
-                    <p>{errors.annualLeave}</p>
+                    ></Control>
                   </Col>
                 </Row>
-              </FormGroup>
-              <FormGroup>
+              </Row>
+              <Row className="form-group">
                 <Row>
                   <Col md={4}>
                     <Label htmlFor="overTime">Số ngày đã làm thêm</Label>
                   </Col>
                   <Col>
-                    <input
+                    <Control
+                      model=".overTime"
                       type="number"
                       id="overTime"
                       name="overTime"
                       placeholder="0"
                       className="form-control"
-                      onChange={handleChange}
-                      onBlur={handleBlur("overTime")}
-                      valid={errors.overTime === ""}
-                      invalid={errors.overTime !== ""}
-                    ></input>
-                    <p>{errors.overTime}</p>
+                    ></Control>
                   </Col>
                 </Row>
-              </FormGroup>
-              <Button color="primary">Thêm</Button>
-            </Form>
+              </Row>
+              <Button color="primary" type="submit">
+                Thêm
+              </Button>
+            </LocalForm>
           </ModalBody>
         </Modal>
       </div>
