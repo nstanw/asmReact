@@ -17,6 +17,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { addStaff } from "../redux/addStaffSlice";
 
 function ListStaffs() {
+  //get state in store
+  const staffInState = useSelector((state) => state);
+  console.log(staffInState);
+
   const dispatch = useDispatch();
 
   const localStaffs = JSON.parse(localStorage.getItem("arrCurrent"));
@@ -35,7 +39,7 @@ function ListStaffs() {
   });
   const [isOpenModal, setOpenModal] = useState(false);
 
-  const handleSubmit = (e, values) => {
+  const handleSubmit = (values, e) => {
     //test form
     console.log("Current State is: " + JSON.stringify(values));
 
@@ -57,16 +61,13 @@ function ListStaffs() {
       JSON.stringify(staffs.concat(newStaffValue))
     );
 
-    // JSON.parse(localStorage.getItem("arrCurrent"));
-
     //set state
     setNewStaff(newStaffValue);
 
     //close modal
     setOpenModal(!isOpenModal);
-    e.preventDefault();
-
     dispatch(addStaff());
+    // e.preventDefault();
   };
 
   const required = (val) => val && val.length;
