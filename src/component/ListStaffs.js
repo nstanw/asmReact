@@ -1,3 +1,5 @@
+import {addStaff} from '../redux/addStaffSlice'
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -15,7 +17,14 @@ import {
 import { STAFFS } from "../shared/staff";
 import { Control, LocalForm, Errors } from "react-redux-form";
 
+
+import {useSelector, useDispatch  } from "react-redux"
+
+
 function ListStaffs() {
+
+ const dispatch = useDispatch();
+
   const localStaffs = JSON.parse(localStorage.getItem("arrCurrent"));
   const staffs = localStaffs === null ? STAFFS : localStaffs;
 
@@ -33,20 +42,42 @@ function ListStaffs() {
   const [isOpenModal, setOpenModal] = useState(false);
 
   const handleSubmit = (values) => {
+    
+
     //test form
     console.log("Current State is: " + JSON.stringify(values));
     alert("Current State is: " + JSON.stringify(values));
-    //set id
-    newStaff.id = staffs.length;
-    STAFFS.concat(newStaff);
-    JSON.parse(localStorage.getItem("arrCurrent"));
-    localStorage.setItem("newStaff", JSON.stringify(newStaff));
-    localStorage.setItem("arrCurrent", JSON.stringify(staffs.concat(newStaff)));
-    JSON.parse(localStorage.getItem("arrCurrent"));
 
-    setNewStaff(newStaff);
+    //set id
+    const idNewStaff = staffs.length;
+
+    // set newstaff
+    const newStaffValue = {id: idNewStaff, ...values,  image: "/assets/images/alberto.png"};
+    console.log("newstaff get submit", newStaffValue)
+    
+    
+    // //add newstaffs to list
+    // STAFFS.concat(newStaff);
+    
+    // //set list staffs in localStorages
+    // JSON.parse(localStorage.getItem("arrCurrent"));
+    
+    //set listStaffLocal
+    localStorage.setItem("newStaff", JSON.stringify(newStaffValue));
+    localStorage.setItem("arrCurrent", JSON.stringify(staffs.concat(newStaffValue)));
+    
+    // JSON.parse(localStorage.getItem("arrCurrent"));
+    
+    //set state
+    setNewStaff(newStaffValue);
+
+    //close modal
     setOpenModal(!isOpenModal);
     // e.preventDefault();
+
+    dispatch()
+
+
   };
 
   // const handleChange = (e) => {
@@ -183,7 +214,6 @@ function ListStaffs() {
                       <option>HR</option>
                       <option>Marketing</option>
                       <option>Finance</option>
-                    
                     </Control.select>
                     <Errors
                       className="text-danger"
@@ -211,17 +241,17 @@ function ListStaffs() {
                       className="form-control"
                       validators={{
                         required,
-                        valueVal: (val) => val >= 1 && val <= 3
+                        valueVal: (val) => val >= 1 && val <= 3,
                       }}
                     ></Control>
                     <Errors
-                        className="text-danger"
-                        model=".salaryScale"
-                        show="touched"
-                        messages={{
-                          required: "Yêu cầu nhập ",
-                          valueVal: "Giá trị từ 1 -> 3"
-                        }}
+                      className="text-danger"
+                      model=".salaryScale"
+                      show="touched"
+                      messages={{
+                        required: "Yêu cầu nhập ",
+                        valueVal: "Giá trị từ 1 -> 3",
+                      }}
                     />
                   </Col>
                 </Row>
