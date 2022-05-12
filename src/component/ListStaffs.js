@@ -1,5 +1,3 @@
-import {addStaff} from '../redux/addStaffSlice'
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -13,17 +11,13 @@ import {
   Col,
   Label,
 } from "reactstrap";
-
 import { STAFFS } from "../shared/staff";
 import { Control, LocalForm, Errors } from "react-redux-form";
-
-
-import {useSelector, useDispatch  } from "react-redux"
-
+import { useSelector, useDispatch } from "react-redux";
+import { addStaff } from "../redux/addStaffSlice";
 
 function ListStaffs() {
-
- const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const localStaffs = JSON.parse(localStorage.getItem("arrCurrent"));
   const staffs = localStaffs === null ? STAFFS : localStaffs;
@@ -41,54 +35,39 @@ function ListStaffs() {
   });
   const [isOpenModal, setOpenModal] = useState(false);
 
-  const handleSubmit = (values) => {
-    
-
+  const handleSubmit = (e, values) => {
     //test form
     console.log("Current State is: " + JSON.stringify(values));
-    alert("Current State is: " + JSON.stringify(values));
 
     //set id
     const idNewStaff = staffs.length;
 
     // set newstaff
-    const newStaffValue = {id: idNewStaff, ...values,  image: "/assets/images/alberto.png"};
-    console.log("newstaff get submit", newStaffValue)
-    
-    
-    // //add newstaffs to list
-    // STAFFS.concat(newStaff);
-    
-    // //set list staffs in localStorages
-    // JSON.parse(localStorage.getItem("arrCurrent"));
-    
+    const newStaffValue = {
+      id: idNewStaff,
+      ...values,
+      image: "/assets/images/alberto.png",
+    };
+    console.log("newstaff get submit", newStaffValue);
+
     //set listStaffLocal
     localStorage.setItem("newStaff", JSON.stringify(newStaffValue));
-    localStorage.setItem("arrCurrent", JSON.stringify(staffs.concat(newStaffValue)));
-    
+    localStorage.setItem(
+      "arrCurrent",
+      JSON.stringify(staffs.concat(newStaffValue))
+    );
+
     // JSON.parse(localStorage.getItem("arrCurrent"));
-    
+
     //set state
     setNewStaff(newStaffValue);
 
     //close modal
     setOpenModal(!isOpenModal);
-    // e.preventDefault();
+    e.preventDefault();
 
-    dispatch()
-
-
+    dispatch(addStaff());
   };
-
-  // const handleChange = (e) => {
-  //   const target = e.target;
-  //   const name = target.name;
-
-  //   newStaff[name] = target.value;
-
-  //   newStaff.id = staffs.length;
-  //   console.log(newStaff);
-  // };
 
   const required = (val) => val && val.length;
   const maxLength = (len) => (val) => !val || val.length <= len;

@@ -1,12 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import reducer from "./addStaffSlice";
+import addStaffReducer from "./addStaffSlice";
 
 const rootReducer = {
-    staff : reducer,
-}
-
+  addStaff: addStaffReducer,
+};
 export const store = configureStore({
   reducer: rootReducer,
-   
-  
 });
