@@ -1,7 +1,18 @@
 import dateFormat from "dateformat";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Breadcrumb, BreadcrumbItem } from "reactstrap";
-const StaffInfor = ({ staff }) => {
+import { STAFFS } from "../shared/staff";
+
+const StaffInfor = () => {
+  const localStaffs = JSON.parse(localStorage.getItem("arrCurrent"));
+  const staffs = localStaffs;
+
+  let params = useParams();
+
+  const staff = staffs.filter(
+    (staff) => staff.id === parseInt(params.staffId, 10)
+  )[0];
+
   return (
     <>
       <Breadcrumb>

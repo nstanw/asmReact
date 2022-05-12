@@ -19,7 +19,7 @@ import { addStaff } from "../redux/addStaffSlice";
 function ListStaffs() {
   //get state in store
   const staffInState = useSelector((state) => state);
-  console.log(staffInState);
+  console.log("state in store:", staffInState);
 
   const dispatch = useDispatch();
 
@@ -67,7 +67,7 @@ function ListStaffs() {
     //close modal
     setOpenModal(!isOpenModal);
     dispatch(addStaff());
-    // e.preventDefault();
+    e.preventDefault();
   };
 
   const required = (val) => val && val.length;
@@ -183,7 +183,6 @@ function ListStaffs() {
                       id="department"
                       name="department"
                       className="form-control"
-                      value="Sale"
                       defaultValue="Sale"
                       validators={{
                         required,
