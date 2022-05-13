@@ -11,12 +11,12 @@ import SalaryScale from "./SalaryScaleComponent";
 import SortDepartment from "./SortDepartmentCOmponents";
 import SortStaffOverTime from "./SortStaffOverTimeComponent";
 import ListStaffs from "./ListStaffs";
+import { useSelector } from "react-redux";
 
 function Main() {
   //hoook
-  const localStaffs = JSON.parse(localStorage.getItem("arrCurrent"));
-  const staffs = localStaffs === null ? STAFFS : localStaffs;
 
+  const staffs = useSelector((state) => state);
   const [col] = useState("");
   const [departments, setDepartment] = useState(DEPARTMENTS);
 
@@ -54,7 +54,7 @@ function Main() {
       <Routes>
         <Route path="/" element={<ListStaffs staffs={staffs} />} />
         <Route path="/staffs" element={<SearchStaffs staffs={staffs} />} />
-        <Route exact path="/staffs/:staffId" element={<StaffWithId />} />
+        <Route exact path="/staffs/:staffId" element={<StaffInfor />} />
         <Route
           path="/departments"
           element={<Department departments={departments} col={col} />}

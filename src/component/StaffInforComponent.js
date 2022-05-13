@@ -1,17 +1,25 @@
 import dateFormat from "dateformat";
+import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { Breadcrumb, BreadcrumbItem } from "reactstrap";
 import { STAFFS } from "../shared/staff";
 
 const StaffInfor = () => {
+  // const staffs = useSelector((state) => state);
+  // console.log("state trog lay inffo", staffs);
+
   const localStaffs = JSON.parse(localStorage.getItem("arrCurrent"));
-  const staffs = localStaffs;
+  const staffs = localStaffs === null ? STAFFS : localStaffs;
+  console.log("state trog lay LOCAL", staffs);
 
   let params = useParams();
+
+  console.log("param", parseInt(params.staffId, 10));
 
   const staff = staffs.filter(
     (staff) => staff.id === parseInt(params.staffId, 10)
   )[0];
+  console.log("sfatdd sau khi nhan", staff);
 
   return (
     <>

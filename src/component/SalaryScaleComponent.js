@@ -22,7 +22,7 @@ const arrSortSalary = staffs.map((salary) => {
   let luong = vnd(salary.salaryScale, salary.overTime);
   return (salary = { ...salary, salaryVnd: parseInt(luong) });
 });
-console.log("luong", arrSortSalary);
+
 const SalaryScale = ({ staffs }) => {
   //hook
   const [salarys, setSalary] = useState(arrSortSalary);
