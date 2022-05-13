@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Breadcrumb, BreadcrumbItem } from "reactstrap";
+import { STAFFS } from "../shared/staff";
 
-export const SearchStaffs = ({ staffs }) => {
+export const SearchStaffs = () => {
+  const localStaffs = JSON.parse(localStorage.getItem("arrCurrent"));
+  const staffs = localStaffs === null ? STAFFS : localStaffs;
+
   const [staffSearch, setSearch] = useState(staffs);
   const handleSearchName = () => {
     const searchText = document.getElementById("search-name").value;

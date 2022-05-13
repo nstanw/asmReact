@@ -1,8 +1,10 @@
-import { useState } from "react";
 import { Breadcrumb, BreadcrumbItem } from "reactstrap";
 import { Card, CardImg, CardHeader, CardText } from "reactstrap";
 import { Link } from "react-router-dom";
-const SortStaffOverTime = ({ staffs, col }) => {
+import { STAFFS } from "../shared/staff";
+const SortStaffOverTime = () => {
+  const localStaffs = JSON.parse(localStorage.getItem("arrCurrent"));
+  const staffs = localStaffs === null ? STAFFS : localStaffs;
   return (
     <div id="sort-overtime">
       <Breadcrumb className="col-12">
@@ -10,7 +12,7 @@ const SortStaffOverTime = ({ staffs, col }) => {
           <Link to={"/"}>Home</Link>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <Link to={"/SortOverTime"} >SortOverTime</Link>
+          <Link to={"/SortOverTime"}>SortOverTime</Link>
         </BreadcrumbItem>
       </Breadcrumb>
       <h4>Nhân viên over time nhiều nhất</h4>
