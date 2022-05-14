@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import { STAFFS } from "../shared/staff";
 const SortStaffOverTime = () => {
   const localStaffs = JSON.parse(localStorage.getItem("arrCurrent"));
-  const staffs = localStaffs === null ? STAFFS : localStaffs;
+  const staffss = localStaffs === null ? STAFFS : localStaffs;
+  const staffs = staffss.sort((a, b) => b.overTime - a.overTime)
   return (
     <div id="sort-overtime">
       <Breadcrumb className="col-12">

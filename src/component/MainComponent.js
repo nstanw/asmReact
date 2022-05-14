@@ -20,30 +20,10 @@ function Main() {
   const [col] = useState("");
   const [departments, setDepartment] = useState(DEPARTMENTS);
 
-  const StaffWithId = () => {
-    let params = useParams();
-    return (
-      <StaffInfor
-        staff={
-          staffs.filter((staff) => staff.id === parseInt(params.staffId, 10))[0]
-        }
-      />
-    );
-  };
-
   const StaffWithDepartment = () => {
     return (
       <>
         <SortDepartment staffs={staffs} />
-      </>
-    );
-  };
-  const SortOverTime = () => {
-    return (
-      <>
-        <SortStaffOverTime
-          staffs={staffs.sort((a, b) => b.overTime - a.overTime)}
-        />
       </>
     );
   };
@@ -64,7 +44,7 @@ function Main() {
           path="/SortDepartment"
           element={<StaffWithDepartment col={col} />}
         />
-        <Route path="/SortOverTime" element={<SortOverTime col={col} />} />
+        <Route path="/SortOverTime" element={<SortStaffOverTime/>} />
         <Route path="/Search" element={<SearchStaffs staffs={staffs} />} />
       </Routes>
 
