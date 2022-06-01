@@ -1,52 +1,75 @@
 import dateFormat from "dateformat";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Breadcrumb, BreadcrumbItem } from "reactstrap";
-import { STAFFS } from "../shared/staff";
+import { useSelector, useDispatch } from "react-redux";
+import { axiosGetListStaff } from "../redux/feature/staffSlice";
+import axios from "axios";
+import request from "../util/request";
 
 const StaffInfor = () => {
-  // const staffs = useSelector((state) => state);
-  // console.log("state trog lay inffo", staffs);
+  //get staff in server to store
+  const staffInState = useSelector((state) => state);
+  const staffs = staffInState.getStaffs.listStaff.listStaff;
 
-  const localStaffs = JSON.parse(localStorage.getItem("arrCurrent"));
-  const staffs = localStaffs === null ? STAFFS : localStaffs;
-  console.log("state trog lay LOCAL", staffs);
+  console.log(staffs);
 
   let params = useParams();
 
-  console.log("param", parseInt(params.staffId, 10));
+  const [listStaff, setListStaff] = useState(staffs);
 
-  const staff = staffs.filter(
-    (staff) => staff.id === parseInt(params.staffId, 10)
-  )[0];
-  console.log("sfatdd sau khi nhan", staff);
 
-  return (
-    <>
-      <Breadcrumb>
-        <BreadcrumbItem>
-          <Link to={"/staffs"}>Home</Link>
-        </BreadcrumbItem>
-        <BreadcrumbItem active>{staff.name}</BreadcrumbItem>
-      </Breadcrumb>
-      <div className="row" id="div-infor">
-        <div className="col-lg-3 col-md-4 col-12">
-          <img id="img-profile-tag" src={staff.image} alt={staff.name}></img>
+  useEffect(() => {
+    request.get("").then((staff) => setListStaff(staff));
+  }, []);
+
+  console.log("listStaff", listStaff);
+
+  
+  if (listStaff) {
+    var staff = listStaff.filter(
+      (Staff) => Staff.id === parseInt(params.staffId)
+    )[0];
+    console.log("staff", staff);
+  } else {
+    var staff = staffs.filter(
+      (Staff) => Staff.id === parseInt(params.staffId)
+    )[0];
+    console.log("staff", staff);
+  }
+
+  if (false) {
+    return (
+      <>
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <Link to={"/staffs"}>Home</Link>
+          </BreadcrumbItem>
+          <BreadcrumbItem active>{staff.name}</BreadcrumbItem>
+        </Breadcrumb>
+        <div className="row" id="div-infor">
+          <div className="col-lg-3 col-md-4 col-12">
+            <img id="img-profile-tag" src={staff.image} alt={staff.name}></img>
+          </div>
+          <div className="col-lg-9 col-md-8 col-12 infor">
+            <li>Họ và tên: {staff.name}</li>
+            <li>Ngày sinh: {dateFormat(staff.doB, "dd/mm/yyyy")}</li>
+            <li>
+              Ngày vào công ty: {dateFormat(staff.startDate, "dd/mm/yyyy")}
+            </li>
+            <li>
+              Chức vụ:
+              {parseFloat(staff.salaryScale) > 1 ? "Quản lý" : "Nhân viên"}
+            </li>
+            <li>Phòng ban: {staff.departmentId}</li>
+            <li>Ngày nghỉ còn lại: {staff.annualLeave}</li>
+            <li>Ngày đi làm thêm: {staff.overTime}</li>
+          </div>
         </div>
-        <div className="col-lg-9 col-md-8 col-12 infor">
-          <li>Họ và tên: {staff.name}</li>
-          <li>Ngày sinh: {dateFormat(staff.doB, "dd/mm/yyyy")}</li>
-          <li>Ngày vào công ty: {dateFormat(staff.startDate, "dd/mm/yyyy")}</li>
-          <li>
-            Chức vụ:
-            {parseFloat(staff.salaryScale) > 1 ? "Quản lý" : "Nhân viên"}
-          </li>
-          <li>Phòng ban: {staff.department.name || staff.department}</li>
-          <li>Ngày nghỉ còn lại: {staff.annualLeave}</li>
-          <li>Ngày đi làm thêm: {staff.overTime}</li>
-        </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  } else {
+    return <></>;
+  }
 };
 export default StaffInfor;

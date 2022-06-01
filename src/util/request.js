@@ -5,12 +5,10 @@ const request = axios.create({
 });
 
 export const get = async (path, option)=>{
-    try {
+    
         const response = await request.get(path);
         return response.data;
-    } catch (error) {
-        console.error(error);
-    }
+
    
 };
 
