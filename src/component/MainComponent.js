@@ -38,15 +38,7 @@ function Main() {
       </>
     );
   };
-  const SortOverTime = () => {
-    return (
-      <>
-        <SortStaffOverTime
-          staffs={staffs.sort((a, b) => b.overTime - a.overTime)}
-        />
-      </>
-    );
-  };
+
   return (
     <div className="container ">
       <NavComponent />
@@ -64,7 +56,7 @@ function Main() {
           path="/SortDepartment"
           element={<StaffWithDepartment col={col} />}
         />
-        <Route path="/SortOverTime" element={<SortOverTime col={col} />} />
+        <Route path="/SortOverTime" element={<SortStaffOverTime />} />
         <Route path="/Search" element={<SearchStaffs staffs={staffs} />} />
       </Routes>
 

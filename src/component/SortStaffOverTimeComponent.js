@@ -1,7 +1,12 @@
 import { Breadcrumb, BreadcrumbItem } from "reactstrap";
 import { Card, CardImg, CardHeader, CardText } from "reactstrap";
 import { Link } from "react-router-dom";
-const SortStaffOverTime = ({ staffs, col }) => {
+import { useSelector } from "react-redux";
+const SortStaffOverTime = () => {
+  const listStaff = useSelector((state) => state.addStaff.listStaff);
+
+  const staffs = listStaff.slice().sort((a, b) => b.overTime - a.overTime);
+
   return (
     <div id="sort-overtime">
       <Breadcrumb className="col-12">
@@ -15,7 +20,11 @@ const SortStaffOverTime = ({ staffs, col }) => {
       <h4>Nhân viên over time nhiều nhất</h4>
       <div className="row cardovertime">
         {staffs.map((staff) => (
-          <div id="cardOverTime" className="col-6 col-md-4 col-lg-3">
+          <div
+            id="cardOverTime"
+            className="col-6 col-md-4 col-lg-3"
+            key={staff.id}
+          >
             <Card>
               <CardHeader>{staff.name}</CardHeader>
               <CardImg src={staff.image} alt={staff.name} />
