@@ -9,7 +9,6 @@ import {
   ModalBody,
   ModalHeader,
   Row,
-  Col,
   Label,
 } from "reactstrap";
 import { Control, LocalForm, Errors } from "react-redux-form";
@@ -72,7 +71,7 @@ const StaffInfor = () => {
   };
 
   //validate
-  const required = (val) => val && val.length;
+  const required = (val) => val && val.length >= 1;
   const maxLength = (len) => (val) => !val || val.length <= len;
   const minLength = (len) => (val) => val && val.length >= len;
 
@@ -94,7 +93,7 @@ const StaffInfor = () => {
           <Modal isOpen={isOpenModal} toggle={toggleModal}>
             <ModalHeader>Sửa nhân viên</ModalHeader>
             <ModalBody>
-              <LocalForm className="form-group" onSubmit={() => handleSubmit}>
+              <LocalForm className="form-group" onSubmit={handleSubmit}>
                 <Row className="form-group">
                   <Label htmlFor="name">Tên</Label>
 
@@ -102,7 +101,7 @@ const StaffInfor = () => {
                     model=".name"
                     id="name"
                     name="name"
-                    placeholder={staffInfo.name}
+                    placeholder="Vui lòng nhập "
                     className="form-control"
                     validators={{
                       required,
@@ -197,7 +196,7 @@ const StaffInfor = () => {
                     type="number"
                     id="salaryScale"
                     name="salaryScale"
-                    placeholder={staffInfo.salaryScale}
+                    placeholder="Nhập hệ số lương..."
                     className="form-control"
                     validators={{
                       required,
@@ -222,9 +221,20 @@ const StaffInfor = () => {
                     type="number"
                     id="annualLeave"
                     name="annualLeave"
-                    placeholder={staffInfo.annualLeave}
+                    placeholder="Vui lòng nhập"
                     className="form-control"
+                    validators={{
+                      required,
+                    }}
                   ></Control>
+                  <Errors
+                    className="text-danger"
+                    model=".startDate"
+                    show="touched"
+                    messages={{
+                      required: "Yêu cầu nhập",
+                    }}
+                  />
                 </Row>
 
                 <Row className="form-group">
@@ -234,9 +244,20 @@ const StaffInfor = () => {
                     type="number"
                     id="overTime"
                     name="overTime"
-                    placeholder={staffInfo.overTime}
+                    placeholder="Vui lòng nhập"
                     className="form-control"
+                    validators={{
+                      required,
+                    }}
                   ></Control>
+                  <Errors
+                    className="text-danger"
+                    model=".startDate"
+                    show="touched"
+                    messages={{
+                      required: "Yêu cầu nhập",
+                    }}
+                  />
                 </Row>
 
                 <Button color="primary" type="submit">
@@ -277,7 +298,9 @@ const StaffInfor = () => {
                 ? "Marketing"
                 : staffInfo.departmentId === "Dept04"
                 ? "IT"
-                : "Finance"}
+                : staffInfo.departmentId === "Dept05"
+                ? "Finance"
+                : null}
             </li>
             <li>Ngày nghỉ còn lại: {staffInfo.annualLeave}</li>
             <li>Ngày đi làm thêm: {staffInfo.overTime}</li>

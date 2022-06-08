@@ -8,7 +8,6 @@ import {
   ModalBody,
   ModalHeader,
   Row,
-  Col,
   Label,
 } from "reactstrap";
 import { Control, LocalForm, Errors } from "react-redux-form";
@@ -18,8 +17,6 @@ import {
   axiosGetListStaff,
   axiosPostStaff,
 } from "../redux/feature/staffSlice";
-import ReactCSSTransitionGroup from "react-transition-group";
-import Animation from "./Animation";
 import Loading from "./Loading";
 
 function ListStaffs() {
@@ -69,16 +66,15 @@ function ListStaffs() {
     //post to server
     dispatch(axiosPostStaff(newStaffValue));
 
-    //close modal
-
     //set state
     setNewStaff(newStaffValue);
+
     setOpenModal(!isOpenModal);
 
     e.preventDefault();
   };
 
-  const required = (val) => val && val.length;
+  const required = (val) => val && val.length >= 1;
   const maxLength = (len) => (val) => !val || val.length <= len;
   const minLength = (len) => (val) => val && val.length >= len;
 
@@ -109,7 +105,7 @@ function ListStaffs() {
         <div className="staff-list row">
           <div>
             <Modal isOpen={isOpenModal} toggle={toggleModal}>
-              <ModalHeader>Thêm nhân viên</ModalHeader>
+              <ModalHeader>Sửa nhân viên</ModalHeader>
               <ModalBody>
                 <LocalForm className="form-group" onSubmit={handleSubmit}>
                   <Row className="form-group">
@@ -193,9 +189,9 @@ function ListStaffs() {
                       }}
                     >
                       <option value={"Dept01"}>Sale</option>
-                      <option value={"Dept02"}>IT</option>
-                      <option value={"Dept03"}>HR</option>
-                      <option value={"Dept04"}>Marketing</option>
+                      <option value={"Dept04"}>IT</option>
+                      <option value={"Dept02"}>HR</option>
+                      <option value={"Dept03"}>Marketing</option>
                       <option value={"Dept05"}>Finance</option>
                     </Control.select>
                     <Errors
@@ -241,7 +237,18 @@ function ListStaffs() {
                       name="annualLeave"
                       placeholder="Vui lòng nhập"
                       className="form-control"
+                      validators={{
+                        required,
+                      }}
                     ></Control>
+                    <Errors
+                      className="text-danger"
+                      model=".startDate"
+                      show="touched"
+                      messages={{
+                        required: "Yêu cầu nhập",
+                      }}
+                    />
                   </Row>
 
                   <Row className="form-group">
@@ -253,7 +260,18 @@ function ListStaffs() {
                       name="overTime"
                       placeholder="Vui lòng nhập"
                       className="form-control"
+                      validators={{
+                        required,
+                      }}
                     ></Control>
+                    <Errors
+                      className="text-danger"
+                      model=".startDate"
+                      show="touched"
+                      messages={{
+                        required: "Yêu cầu nhập",
+                      }}
+                    />
                   </Row>
 
                   <Button color="primary" type="submit">
