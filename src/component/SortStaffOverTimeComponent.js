@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect } from "react";
 const SortStaffOverTime = () => {
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     dispatch(axiosGetListStaff());
   }, []);
@@ -15,7 +15,14 @@ const SortStaffOverTime = () => {
   const staffInState = useSelector((state) => state);
 
   //get staff in server to store
-  const staffs = staffInState.getStaffs.listStaff.listStaff;
+  let staffs = staffInState.getStaffs.listStaff.listStaff;
+
+  const arrSort = staffs.slice().sort((a, b) => b.overTime - a.overTime);
+  console.log("arrSort", arrSort);
+  staffs = [...arrSort];
+  // setSalary(arrSortES6);
+  // setShow(false)
+
   return (
     <div id="sort-overtime">
       <Breadcrumb className="col-12">
@@ -29,7 +36,11 @@ const SortStaffOverTime = () => {
       <h4>Nhân viên over time nhiều nhất</h4>
       <div className="row cardovertime">
         {staffs.map((staff) => (
-          <div key={staff.id} id="cardOverTime" className="col-6 col-md-4 col-lg-3">
+          <div
+            key={staff.id}
+            id="cardOverTime"
+            className="col-6 col-md-4 col-lg-3"
+          >
             <Card>
               <CardHeader>{staff.name}</CardHeader>
               <CardImg src={staff.image} alt={staff.name} />

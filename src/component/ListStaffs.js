@@ -13,7 +13,14 @@ import {
 } from "reactstrap";
 import { Control, LocalForm, Errors } from "react-redux-form";
 import { useSelector, useDispatch } from "react-redux";
-import { axiosGetListStaff, axiosPostStaff } from "../redux/feature/staffSlice";
+import {
+  axiosDeleteStaff,
+  axiosGetListStaff,
+  axiosPostStaff,
+} from "../redux/feature/staffSlice";
+import ReactCSSTransitionGroup from "react-transition-group";
+import Animation from "./Animation";
+import Loading from "./Loading";
 
 function ListStaffs() {
   const dispatch = useDispatch();
@@ -26,7 +33,10 @@ function ListStaffs() {
   const staffInState = useSelector((state) => state);
 
   //get staff in server to store
-  const staffs = staffInState.getStaffs.listStaff.listStaff;
+  let staffs = staffInState.getStaffs.listStaff.listStaff;
+
+  // staffs = changeSttId();
+  console.log("staffs", staffs);
 
   const [newStaff, setNewStaff] = useState({
     id: 1,
@@ -55,52 +65,66 @@ function ListStaffs() {
       image: "/assets/images/alberto.png",
     };
     console.log("newstaff get submit", newStaffValue);
-    
+
     //post to server
-    dispatch(axiosPostStaff(newStaffValue))
-    
+    dispatch(axiosPostStaff(newStaffValue));
+
     //close modal
-    
-        //set state
-        setNewStaff(newStaffValue);
+
+    //set state
+    setNewStaff(newStaffValue);
     setOpenModal(!isOpenModal);
-    
+
     e.preventDefault();
   };
 
   const required = (val) => val && val.length;
   const maxLength = (len) => (val) => !val || val.length <= len;
   const minLength = (len) => (val) => val && val.length >= len;
-  const isNumber = (val) => !isNaN(Number(val));
 
   const toggleModal = () => {
     setOpenModal(!isOpenModal);
   };
 
+  const handleDelete = (id) => {
+    console.log("id", id);
+
+    const isDelete = window.confirm("Xóa nhé bạn hiền!???");
+
+    if (isDelete) {
+      dispatch(axiosDeleteStaff(id));
+
+      setTimeout(() => {
+        dispatch(axiosGetListStaff());
+      }, 500);
+    }
+  };
+  console.log(staffInState.getStaffs.listStaff.isLoading);
+
   return (
-    <div className="staff-list row">
-      <div>
-        <Modal isOpen={isOpenModal} toggle={toggleModal}>
-          <ModalHeader>Thêm nhân viên</ModalHeader>
-          <ModalBody>
-            <LocalForm className="form-group" onSubmit={handleSubmit}>
-              <Row className="form-group">
-                <Row>
-                  <Col md={4}>
+    <div>
+      {staffInState.getStaffs.listStaff.isLoading ? (
+        <Loading />
+      ) : (
+        <div className="staff-list row">
+          <div>
+            <Modal isOpen={isOpenModal} toggle={toggleModal}>
+              <ModalHeader>Thêm nhân viên</ModalHeader>
+              <ModalBody>
+                <LocalForm className="form-group" onSubmit={handleSubmit}>
+                  <Row className="form-group">
                     <Label htmlFor="name">Tên</Label>
-                  </Col>
-                  <Col>
-                    <Control.text
+
+                    <Control
                       model=".name"
                       id="name"
                       name="name"
-                      placeholder="Nhập tên của bạn"
+                      placeholder="Vui lòng nhập "
                       className="form-control"
                       validators={{
                         required,
-
                         minLength: minLength(6),
-                        maxLength: maxLength(15),
+                        maxLength: maxLength(25),
                       }}
                     />
                     <Errors
@@ -113,16 +137,10 @@ function ListStaffs() {
                         maxLength: "Tên phải ít hơn 15 kí tự",
                       }}
                     />
-                  </Col>
-                </Row>
-              </Row>
-              <Row className="form-group">
-                <Row>
-                  <Col md={4}>
+                  </Row>
+                  <Row className="form-group">
                     <Label htmlFor="doB">Ngày sinh</Label>
-                  </Col>
-                  <Col>
-                    <Control.input
+                    <Control
                       type="date"
                       model=".doB"
                       id="doB"
@@ -131,7 +149,7 @@ function ListStaffs() {
                       validators={{
                         required,
                       }}
-                    ></Control.input>
+                    ></Control>
                     <Errors
                       className="text-danger"
                       model=".doB"
@@ -140,16 +158,10 @@ function ListStaffs() {
                         required: "Yêu cầu nhập",
                       }}
                     />
-                  </Col>
-                </Row>
-              </Row>
-              <Row className="form-group">
-                <Row>
-                  <Col md={4}>
+                  </Row>
+                  <Row className="form-group">
                     <Label htmlFor="startDate">Ngày vào công ty</Label>
-                  </Col>
-                  <Col>
-                    <Control.input
+                    <Control
                       model=".startDate"
                       type="date"
                       id="startDate"
@@ -158,7 +170,7 @@ function ListStaffs() {
                       validators={{
                         required,
                       }}
-                    ></Control.input>
+                    ></Control>
                     <Errors
                       className="text-danger"
                       model=".startDate"
@@ -167,30 +179,24 @@ function ListStaffs() {
                         required: "Yêu cầu nhập",
                       }}
                     />
-                  </Col>
-                </Row>
-              </Row>
-              <Row className="form-group">
-                <Row>
-                  <Col md={4}>
+                  </Row>
+
+                  <Row className="form-group">
                     <Label htmlFor="department">Phòng ban</Label>
-                  </Col>
-                  <Col>
                     <Control.select
-                      model=".department"
-                      id="department"
-                      name="department"
+                      model=".departmentId"
+                      id="departmentId"
+                      name="departmentId"
                       className="form-control"
-                      defaultValue="Sale"
                       validators={{
                         required,
                       }}
                     >
-                      <option>Sale</option>
-                      <option>IT</option>
-                      <option>HR</option>
-                      <option>Marketing</option>
-                      <option>Finance</option>
+                      <option value={"Dept01"}>Sale</option>
+                      <option value={"Dept02"}>IT</option>
+                      <option value={"Dept03"}>HR</option>
+                      <option value={"Dept04"}>Marketing</option>
+                      <option value={"Dept05"}>Finance</option>
                     </Control.select>
                     <Errors
                       className="text-danger"
@@ -200,21 +206,15 @@ function ListStaffs() {
                         required: "Yêu cầu chọn",
                       }}
                     />
-                  </Col>
-                </Row>
-              </Row>
-              <Row className="form-group">
-                <Row>
-                  <Col md={4}>
+                  </Row>
+                  <Row className="form-group">
                     <Label htmlFor="salaryScale">Hệ số lương</Label>
-                  </Col>
-                  <Col>
                     <Control
                       model=".salaryScale"
                       type="number"
                       id="salaryScale"
                       name="salaryScale"
-                      placeholder="0"
+                      placeholder="Nhập hệ số lương..."
                       className="form-control"
                       validators={{
                         required,
@@ -230,71 +230,74 @@ function ListStaffs() {
                         valueVal: "Giá trị từ 1 -> 3",
                       }}
                     />
-                  </Col>
-                </Row>
-              </Row>
-              <Row className="form-group">
-                <Row>
-                  <Col md={4}>
+                  </Row>
+
+                  <Row className="form-group">
                     <Label htmlFor="overTime">Số ngày nghỉ còn lại</Label>
-                  </Col>
-                  <Col>
                     <Control
                       model=".annualLeave"
                       type="number"
                       id="annualLeave"
                       name="annualLeave"
-                      placeholder="0"
+                      placeholder="Vui lòng nhập"
                       className="form-control"
                     ></Control>
-                  </Col>
-                </Row>
-              </Row>
-              <Row className="form-group">
-                <Row>
-                  <Col md={4}>
+                  </Row>
+
+                  <Row className="form-group">
                     <Label htmlFor="overTime">Số ngày đã làm thêm</Label>
-                  </Col>
-                  <Col>
                     <Control
                       model=".overTime"
                       type="number"
                       id="overTime"
                       name="overTime"
-                      placeholder="0"
+                      placeholder="Vui lòng nhập"
                       className="form-control"
                     ></Control>
-                  </Col>
-                </Row>
-              </Row>
-              <Button color="primary" type="submit">
-                Thêm
-              </Button>
-            </LocalForm>
-          </ModalBody>
-        </Modal>
-      </div>
-      <Breadcrumb className="col-12">
-        <BreadcrumbItem>
-          <Link to={"/"}>Home</Link>
-        </BreadcrumbItem>
-      </Breadcrumb>
-      <div className="col-12 row">
-        <div className="col-6">
-          <Button className="col-3" onClick={toggleModal}>
-            +
-          </Button>
-        </div>
-      </div>
+                  </Row>
 
-      {staffs.map((staff) => (
-        <div className={`col-6 col-md-4 col-lg-2`} key={staff.id}>
-          <Link to={`/staffs/${staff.id}`}>
-            <img id="img-profile-tag" src={staff.image} alt={staff.name}></img>
-            <h5 id="name-staff">{staff.name}</h5>
-          </Link>
+                  <Button color="primary" type="submit">
+                    Thêm
+                  </Button>
+                </LocalForm>
+              </ModalBody>
+            </Modal>
+          </div>
+          <Breadcrumb className="col-12">
+            <BreadcrumbItem>
+              <Link to={"/"}>Home</Link>
+            </BreadcrumbItem>
+          </Breadcrumb>
+          <div className="col-12 row">
+            <div className="col-6">
+              <Button className="col-3" onClick={toggleModal}>
+                +
+              </Button>
+            </div>
+          </div>
+
+          {staffs.map((staff) => (
+            <div className={`col-6 col-md-4 col-lg-2`} key={staff.id}>
+              <div className="col-12 row">
+                <button
+                  className="col-12"
+                  onClick={() => handleDelete(staff.id)}
+                >
+                  xóa
+                </button>
+              </div>
+              <Link to={`/staffs/${staff.id}`}>
+                <img
+                  id="img-profile-tag"
+                  src={staff.image}
+                  alt={staff.name}
+                ></img>
+                <h5 id="name-staff">{staff.name}</h5>
+              </Link>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 }

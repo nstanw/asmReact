@@ -1,75 +1,290 @@
 import dateFormat from "dateformat";
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Breadcrumb, BreadcrumbItem } from "reactstrap";
-import { useSelector, useDispatch } from "react-redux";
-import { axiosGetListStaff } from "../redux/feature/staffSlice";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  Button,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  Row,
+  Col,
+  Label,
+} from "reactstrap";
+import { Control, LocalForm, Errors } from "react-redux-form";
+import { useSelector } from "react-redux";
 import axios from "axios";
-import request from "../util/request";
 
 const StaffInfor = () => {
-  //get staff in server to store
+  let params = useParams();
+
   const staffInState = useSelector((state) => state);
   const staffs = staffInState.getStaffs.listStaff.listStaff;
 
-  console.log(staffs);
-
-  let params = useParams();
-
-  const [listStaff, setListStaff] = useState(staffs);
-
+  const [isOpenModal, setOpenModal] = useState(false);
+  const [staffInfo, setStaffInfor] = useState(staffs);
 
   useEffect(() => {
-    request.get("").then((staff) => setListStaff(staff));
+    axios.get("http://localhost:8080/staffs").then((data) => {
+      console.log(data.data);
+
+      const staff = data.data.filter(
+        (staff) => staff.id === parseInt(params.staffId, 10)
+      )[0];
+      console.log("staff", staff);
+
+      setStaffInfor(staff);
+    });
   }, []);
 
-  console.log("listStaff", listStaff);
+  const handleConfig = () => {
+    toggleModal();
+  };
 
-  
-  if (listStaff) {
-    var staff = listStaff.filter(
-      (Staff) => Staff.id === parseInt(params.staffId)
-    )[0];
-    console.log("staff", staff);
-  } else {
-    var staff = staffs.filter(
-      (Staff) => Staff.id === parseInt(params.staffId)
-    )[0];
-    console.log("staff", staff);
-  }
+  const handleSubmit = (values, e) => {
+    e.preventDefault();
 
-  if (false) {
+    let data = {
+      id: params.staffId,
+      ...values,
+    };
+
+    data = JSON.parse(JSON.stringify(data));
+    console.log(data);
+
+    axios.patch("http://localhost:8080/staffs/", data).catch(console.error());
+
+    setTimeout(() => {
+      axios.get("http://localhost:8080/staffs").then((data) => {
+        console.log(data.data);
+
+        const staff = data.data.filter(
+          (staff) => staff.id === parseInt(params.staffId, 10)
+        )[0];
+        console.log("staff", staff);
+
+        setStaffInfor(staff);
+      });
+    }, 500);
+
+    toggleModal();
+  };
+
+  //validate
+  const required = (val) => val && val.length;
+  const maxLength = (len) => (val) => !val || val.length <= len;
+  const minLength = (len) => (val) => val && val.length >= len;
+
+  const toggleModal = () => {
+    setOpenModal(!isOpenModal);
+  };
+
+  if (true) {
     return (
       <>
         <Breadcrumb>
           <BreadcrumbItem>
             <Link to={"/staffs"}>Home</Link>
           </BreadcrumbItem>
-          <BreadcrumbItem active>{staff.name}</BreadcrumbItem>
+          <BreadcrumbItem active>{staffInfo.name}</BreadcrumbItem>
         </Breadcrumb>
+
+        <div>
+          <Modal isOpen={isOpenModal} toggle={toggleModal}>
+            <ModalHeader>Sửa nhân viên</ModalHeader>
+            <ModalBody>
+              <LocalForm className="form-group" onSubmit={() => handleSubmit}>
+                <Row className="form-group">
+                  <Label htmlFor="name">Tên</Label>
+
+                  <Control
+                    model=".name"
+                    id="name"
+                    name="name"
+                    placeholder={staffInfo.name}
+                    className="form-control"
+                    validators={{
+                      required,
+                      minLength: minLength(6),
+                      maxLength: maxLength(25),
+                    }}
+                  />
+                  <Errors
+                    className="text-danger"
+                    model=".name"
+                    show="touched"
+                    messages={{
+                      required: "Yêu cầu nhập",
+                      minLength: "Tên phải ít nhất có 6 kí tự",
+                      maxLength: "Tên phải ít hơn 15 kí tự",
+                    }}
+                  />
+                </Row>
+                <Row className="form-group">
+                  <Label htmlFor="doB">Ngày sinh</Label>
+                  <Control
+                    type="date"
+                    model=".doB"
+                    id="doB"
+                    name="doB"
+                    className="form-control"
+                    validators={{
+                      required,
+                    }}
+                  ></Control>
+                  <Errors
+                    className="text-danger"
+                    model=".doB"
+                    show="touched"
+                    messages={{
+                      required: "Yêu cầu nhập",
+                    }}
+                  />
+                </Row>
+                <Row className="form-group">
+                  <Label htmlFor="startDate">Ngày vào công ty</Label>
+                  <Control
+                    model=".startDate"
+                    type="date"
+                    id="startDate"
+                    name="startDate"
+                    className="form-control"
+                    validators={{
+                      required,
+                    }}
+                  ></Control>
+                  <Errors
+                    className="text-danger"
+                    model=".startDate"
+                    show="touched"
+                    messages={{
+                      required: "Yêu cầu nhập",
+                    }}
+                  />
+                </Row>
+
+                <Row className="form-group">
+                  <Label htmlFor="department">Phòng ban</Label>
+                  <Control.select
+                    model=".departmentId"
+                    id="departmentId"
+                    name="departmentId"
+                    className="form-control"
+                    validators={{
+                      required,
+                    }}
+                  >
+                    <option value={"Dept01"}>Sale</option>
+                    <option value={"Dept04"}>IT</option>
+                    <option value={"Dept02"}>HR</option>
+                    <option value={"Dept03"}>Marketing</option>
+                    <option value={"Dept05"}>Finance</option>
+                  </Control.select>
+                  <Errors
+                    className="text-danger"
+                    model=".department"
+                    show="touched"
+                    messages={{
+                      required: "Yêu cầu chọn",
+                    }}
+                  />
+                </Row>
+                <Row className="form-group">
+                  <Label htmlFor="salaryScale">Hệ số lương</Label>
+                  <Control
+                    model=".salaryScale"
+                    type="number"
+                    id="salaryScale"
+                    name="salaryScale"
+                    placeholder={staffInfo.salaryScale}
+                    className="form-control"
+                    validators={{
+                      required,
+                      valueVal: (val) => val >= 1 && val <= 3,
+                    }}
+                  ></Control>
+                  <Errors
+                    className="text-danger"
+                    model=".salaryScale"
+                    show="touched"
+                    messages={{
+                      required: "Yêu cầu nhập ",
+                      valueVal: "Giá trị từ 1 -> 3",
+                    }}
+                  />
+                </Row>
+
+                <Row className="form-group">
+                  <Label htmlFor="overTime">Số ngày nghỉ còn lại</Label>
+                  <Control
+                    model=".annualLeave"
+                    type="number"
+                    id="annualLeave"
+                    name="annualLeave"
+                    placeholder={staffInfo.annualLeave}
+                    className="form-control"
+                  ></Control>
+                </Row>
+
+                <Row className="form-group">
+                  <Label htmlFor="overTime">Số ngày đã làm thêm</Label>
+                  <Control
+                    model=".overTime"
+                    type="number"
+                    id="overTime"
+                    name="overTime"
+                    placeholder={staffInfo.overTime}
+                    className="form-control"
+                  ></Control>
+                </Row>
+
+                <Button color="primary" type="submit">
+                  Thêm
+                </Button>
+              </LocalForm>
+            </ModalBody>
+          </Modal>
+        </div>
+
         <div className="row" id="div-infor">
           <div className="col-lg-3 col-md-4 col-12">
-            <img id="img-profile-tag" src={staff.image} alt={staff.name}></img>
+            <img
+              id="img-profile-tag"
+              src={staffInfo.image}
+              alt={staffInfo.name}
+            ></img>
+            <button className="col" onClick={() => handleConfig(staffInfo.id)}>
+              <span className="fa fa-cogs" aria-hidden="true">
+                {" "}
+                Sửa thông tin
+              </span>
+            </button>
           </div>
           <div className="col-lg-9 col-md-8 col-12 infor">
-            <li>Họ và tên: {staff.name}</li>
-            <li>Ngày sinh: {dateFormat(staff.doB, "dd/mm/yyyy")}</li>
+            <li>Họ và tên: {staffInfo.name}</li>
+            <li>Ngày sinh: {dateFormat(staffInfo.doB, "dd/mm/yyyy")}</li>
             <li>
-              Ngày vào công ty: {dateFormat(staff.startDate, "dd/mm/yyyy")}
+              Ngày vào công ty: {dateFormat(staffInfo.startDate, "dd/mm/yyyy")}
             </li>
             <li>
-              Chức vụ:
-              {parseFloat(staff.salaryScale) > 1 ? "Quản lý" : "Nhân viên"}
+              Phòng ban:{" "}
+              {staffInfo.departmentId === "Dept01"
+                ? "Sale"
+                : staffInfo.departmentId === "Dept02"
+                ? "HR"
+                : staffInfo.departmentId === "Dept03"
+                ? "Marketing"
+                : staffInfo.departmentId === "Dept04"
+                ? "IT"
+                : "Finance"}
             </li>
-            <li>Phòng ban: {staff.departmentId}</li>
-            <li>Ngày nghỉ còn lại: {staff.annualLeave}</li>
-            <li>Ngày đi làm thêm: {staff.overTime}</li>
+            <li>Ngày nghỉ còn lại: {staffInfo.annualLeave}</li>
+            <li>Ngày đi làm thêm: {staffInfo.overTime}</li>
           </div>
         </div>
       </>
     );
-  } else {
-    return <></>;
   }
 };
 export default StaffInfor;

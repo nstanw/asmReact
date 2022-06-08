@@ -157,3 +157,7 @@ p {
   transition: all 300ms ease-out;
 }
 
+h5 {
+  font-weight: bolder;
+  color:rgb(40, 17, 251);
+}

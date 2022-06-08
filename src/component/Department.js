@@ -28,7 +28,6 @@ const Department = () => {
     //   dispatch(axiosGetDeptID(id));
     // }).then(console.log("done!", Staff));
     dispatch(axiosGetDeptID(id));
-    
   };
 
   return (
@@ -58,7 +57,7 @@ const Department = () => {
         {Staff === []
           ? false
           : Staff.map((staff) => (
-              <div className="col-12 col-md-6 col-lg-4">
+              <div className="col-12 col-md-6 col-lg-4" key={staff.id}>
                 <Card>
                   <CardHeader>{staff.name}</CardHeader>
                   <CardImg src={staff.image} alt={staff.name} />
@@ -73,8 +72,7 @@ const Department = () => {
                       ? "Mảketing"
                       : staff.departmentId === "Dept04"
                       ? "IT"
-                     : "Finance" }
-                  
+                      : "Finance"}
                   </CardText>
                   <CardText>Số giờ làm thêm:{staff.overTime}</CardText>
                   <CardText>Lương:{staff.salary}</CardText>
