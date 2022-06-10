@@ -31,7 +31,7 @@ const StaffInfor = () => {
       const staff = data.data.filter(
         (staff) => staff.id === parseInt(params.staffId, 10)
       )[0];
-      console.log("staff", staff);
+      console.log("data info", staff);
 
       setStaffInfor(staff);
     });
@@ -46,11 +46,12 @@ const StaffInfor = () => {
 
     let data = {
       id: params.staffId,
+      departmentId: e.target.value,
       ...values,
     };
 
+    console.log("data to patch", data);
     data = JSON.parse(JSON.stringify(data));
-    console.log(data);
 
     axios.patch("http://localhost:8080/staffs/", data).catch(console.error());
 
@@ -61,7 +62,7 @@ const StaffInfor = () => {
         const staff = data.data.filter(
           (staff) => staff.id === parseInt(params.staffId, 10)
         )[0];
-        console.log("staff", staff);
+        console.log("data get affter change", staff);
 
         setStaffInfor(staff);
       });
@@ -170,9 +171,7 @@ const StaffInfor = () => {
                     id="departmentId"
                     name="departmentId"
                     className="form-control"
-                    validators={{
-                      required,
-                    }}
+                    defaultValue="Dept01"
                   >
                     <option value={"Dept01"}>Sale</option>
                     <option value={"Dept04"}>IT</option>
@@ -180,14 +179,6 @@ const StaffInfor = () => {
                     <option value={"Dept03"}>Marketing</option>
                     <option value={"Dept05"}>Finance</option>
                   </Control.select>
-                  <Errors
-                    className="text-danger"
-                    model=".department"
-                    show="touched"
-                    messages={{
-                      required: "Yêu cầu chọn",
-                    }}
-                  />
                 </Row>
                 <Row className="form-group">
                   <Label htmlFor="salaryScale">Hệ số lương</Label>
@@ -276,10 +267,7 @@ const StaffInfor = () => {
               alt={staffInfo.name}
             ></img>
             <button className="col" onClick={() => handleConfig(staffInfo.id)}>
-              <span className="fa fa-cogs" aria-hidden="true">
-                {" "}
-                Sửa thông tin
-              </span>
+              <span className="fa fa-comment fa-lg"> Sửa</span>
             </button>
           </div>
           <div className="col-lg-9 col-md-8 col-12 infor">

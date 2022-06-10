@@ -18,6 +18,7 @@ import {
   axiosPostStaff,
 } from "../redux/feature/staffSlice";
 import Loading from "./Loading";
+import { Stagger, Fade } from "react-animation-components";
 
 function ListStaffs() {
   const dispatch = useDispatch();
@@ -96,6 +97,31 @@ function ListStaffs() {
     }
   };
   console.log(staffInState.getStaffs.listStaff.isLoading);
+
+  //render animation staff
+  const RenderStaff = () => {
+    return (
+      <Stagger in className={`col-12 row`}>
+        {staffs.map((staff) => (
+          <Fade in className="col-6 col-md-4 col-lg-2">
+            <div key={staff.id}>
+              <button className="col-12" onClick={() => handleDelete(staff.id)}>
+                xóa
+              </button>
+            </div>
+            <Link to={`/staffs/${staff.id}`}>
+              <img
+                id="img-profile-tag"
+                src={staff.image}
+                alt={staff.name}
+              ></img>
+              <h5 id="name-staff">{staff.name}</h5>
+            </Link>
+          </Fade>
+        ))}
+      </Stagger>
+    );
+  };
 
   return (
     <div>
@@ -294,7 +320,9 @@ function ListStaffs() {
             </div>
           </div>
 
-          {staffs.map((staff) => (
+          <RenderStaff />
+
+          {/* {staffs.map((staff) => (
             <div className={`col-6 col-md-4 col-lg-2`} key={staff.id}>
               <div className="col-12 row">
                 <button
@@ -313,7 +341,7 @@ function ListStaffs() {
                 <h5 id="name-staff">{staff.name}</h5>
               </Link>
             </div>
-          ))}
+          ))} */}
         </div>
       )}
     </div>
