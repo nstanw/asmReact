@@ -6,6 +6,18 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
+baseUrl 1: https://rjs101xbackend.herokuapp.com/
+
+baseUrl2: https://nodejstesthatn.herokuapp.com/
+Học viên vào link baseUrl để kiểm tra tính ổn định của server, sử dụng 1 trong 2 link để giảm thiểu việc nhiều người sử dụng cùng lúc khiến api quá tải.
+
+Phương án 2. Source code BE để học viên tự chạy localhost nếu API trên có vấn đề, khi đó baseUrl sẽ là: http://localhost/8080
+https://github.com/vungoctrung93/RJS101xASM4BackEnd.git
+Cách chạy:
+1, Chọn branch main, clone về máy.
+2, Thực hiện command: npm install.
+3, Thực hiện command: npm start.
+
 ### `npm start`
 
 Runs the app in the development mode.\
